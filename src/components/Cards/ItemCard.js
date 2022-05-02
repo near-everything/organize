@@ -7,6 +7,7 @@ import CardBody from "../CardBody";
 import Button from "../Button";
 import Select from "../Select";
 import ThemedSuspense from "../ThemedSuspense";
+import { callFunction } from "../../app/near";
 
 function ItemCard({ item }) {
   const [category, setCategory] = useState(null);
@@ -21,6 +22,7 @@ function ItemCard({ item }) {
         isValidated: true,
         updatedTimestamp: Timestamp.now(),
       }, { merge: true });
+      await callFunction("mint")
     } catch (e) {
       console.log(e);
     } finally {
@@ -69,7 +71,7 @@ function ItemCard({ item }) {
           <p className="text-gray-600 dark:text-gray-400">
             {item.brand || "empty"}
           </p>
-          <Button onClick={approve}>Approve</Button>
+          <Button onClick={() => approve(item.id)}>Approve</Button>
           <Button onClick={decline}>Decline</Button>
           <Button onClick={() => update(item.id)}>Update</Button>
         </div>

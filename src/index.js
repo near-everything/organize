@@ -11,6 +11,7 @@ import ThemedSuspense from "./components/ThemedSuspense";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
+import { Buffer } from "buffer"; global.Buffer = Buffer;
 
 
 const persistor = persistStore(store);

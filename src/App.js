@@ -1,4 +1,4 @@
-import React, { lazy } from "react";
+import React, { useEffect, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 
 import AccessibleNavigationAnnouncer from "./components/AccessibleNavigationAnnouncer";
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectUser, setUser } from "./features/auth/authSlice";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { firebase } from "./app/firebase";
+import { initNear } from "./app/near";
 
 const Layout = lazy(() => import("./containers/Layout"));
 const Login = lazy(() => import("./pages/Login"));
@@ -20,6 +21,11 @@ function App() {
       dispatch(setUser(null))
     }
   })
+  
+  useEffect(() => {
+    initNear()
+  }, [])
+  
 
   return (
     <>

@@ -3,9 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import Header from "../components/Header";
 import ThemedSuspense from "../components/ThemedSuspense";
 import Main from "../containers/Main";
-import routes from "../routes";
 
-
+const Organize = lazy(() => import("../pages/Organize"));
+const Item = lazy(() => import("../pages/Item"));
 const Page404 = lazy(() => import("../pages/404"));
 
 function Layout() {
@@ -16,16 +16,8 @@ function Layout() {
         <Main>
           <Suspense fallback={<ThemedSuspense />}>
             <Routes>
-              {routes.map((route, i) => {
-                return route.component ? (
-                  <Route
-                    key={i}
-                    exact={true}
-                    path={`/${route.path}`}
-                    element={<route.component />}
-                  />
-                ) : null;
-              })}
+              <Route path={"/"} element={<Organize />} />
+              <Route path="item/:itemId" element={<Item />} />
               <Route element={<Page404 />} />
             </Routes>
           </Suspense>

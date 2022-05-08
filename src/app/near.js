@@ -5,7 +5,7 @@ import {
   utils as nearUtils,
 } from "near-api-js";
 
-export const CONTRACT_ID = "common-good.collect.testnet";
+export const CONTRACT_ID = "v1.everything.testnet";
 
 export const initNear = () => {
   //Testnet config
@@ -35,6 +35,10 @@ export const signIn = () => {
 export const signOut = () => {
   wallet.signOut();
 };
+
+export const getAccount = () => {
+  return wallet.account()
+}
 
 //Function for view methods
 export const viewFunction = async (functionName, args = {}) => {

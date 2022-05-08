@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { setDoc, Timestamp, doc } from "firebase/firestore";
-import { db } from "../../app/firebase"
+import { db } from "../../app/firebase";
 import { categories } from "../../utils/categories";
 import Card from "../Card";
 import CardBody from "../CardBody";
 import Button from "../Button";
 import Select from "../Select";
 import ThemedSuspense from "../ThemedSuspense";
-import { callFunction } from "../../app/near";
+import { callFunction, getAccount } from "../../app/near";
+import { Link } from "react-router-dom";
 
 function ItemCard({ item }) {
   const [category, setCategory] = useState(null);
@@ -18,11 +19,27 @@ function ItemCard({ item }) {
 
     try {
       const docRef = doc(db, "items", id);
-      await setDoc(docRef, {
-        isValidated: true,
-        updatedTimestamp: Timestamp.now(),
-      }, { merge: true });
-      await callFunction("mint")
+      await setDoc(
+        docRef,
+        {
+          isValidated: true,
+          updatedTimestamp: Timestamp.now(),
+        },
+        { merge: true }
+      );
+      const account = getAccount();
+      await callFunction(
+        "nft_mint",
+        {
+          token_id: `${account.accountId + Date.now()}`,
+          metadata: {
+            title: "test title",
+            description: "test description",
+          },
+          receiver_id: account.accountId,
+        },
+        "0.1"
+      );
     } catch (e) {
       console.log(e);
     } finally {
@@ -37,10 +54,14 @@ function ItemCard({ item }) {
 
     try {
       const docRef = doc(db, "items", id);
-      await setDoc(docRef, {
-        category: category,
-        updatedTimestamp: Timestamp.now(),
-      }, { merge: true });
+      await setDoc(
+        docRef,
+        {
+          category: category,
+          updatedTimestamp: Timestamp.now(),
+        },
+        { merge: true }
+      );
     } catch (e) {
       console.log(e);
     } finally {
@@ -54,26 +75,21 @@ function ItemCard({ item }) {
 
   return (
     <Card>
-      <CardBody className="flex items-center">
-        <img alt="not found" src={item.media[0]} className="w-32 m-2" />
-        <div>
-          <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            {item.subcategory}
-          </p>
+      <CardBody className="flex flex-col">
+        <img alt="not found" src={item.media[0]} className="m-2" />
+        <div className="flex flex-col m-2">
           <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
             {categories.find((it) => it.value === item.category).name}
           </p>
-          <Select
-            placeholder="category"
-            onChange={(e) => setCategory(e.target.value)}
-            options={categories}
-          />
-          <p className="text-gray-600 dark:text-gray-400">
-            {item.brand || "empty"}
+          <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+            {item.subcategory}
           </p>
-          <Button onClick={() => approve(item.id)}>Approve</Button>
+          <div className="flex justify-end">
+            <Link to={{ pathname: `item/${item.id}` }}>see more</Link>
+          </div>
+          {/* <Button onClick={() => approve(item.id)}>Approve</Button>
           <Button onClick={decline}>Decline</Button>
-          <Button onClick={() => update(item.id)}>Update</Button>
+          <Button onClick={() => update(item.id)}>Update</Button> */}
         </div>
       </CardBody>
     </Card>

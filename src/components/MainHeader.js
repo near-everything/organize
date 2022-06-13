@@ -1,19 +1,13 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
-import { signIn } from "../app/near";
 import { MoonIcon, SunIcon } from "../icons";
-import Button from "./Button";
 import { DarkModeContext } from "./DarkMode";
 
-function Header() {
+function MainHeader() {
   const { mode, toggleMode } = useContext(DarkModeContext);
   return (
-    <header className="z-40 py-4 bg-white shadow-bottom dark:bg-black">
-      <div className="container flex items-center justify-between h-full px-6 mx-auto text-green-600 dark:text-green-300">
-        <Link to="/">
-          <p className="text-xl font-bold text-yellow-600">organize</p>
-        </Link>
-        <ul className="flex items-center flex-shrink-0 space-x-6 text-yellow-600 dark:text-yellow-300">
+    <header className="z-40 py-4 shadow-bottom">
+      <div className="container flex items-center justify-between h-full px-6 mx-auto text-yellow-600 dark:text-yellow-300">
+        <ul className="flex items-center flex-shrink-0 space-x-6">
           {/* <!-- Theme toggler --> */}
           <li className="flex">
             <button
@@ -28,13 +22,10 @@ function Header() {
               )}
             </button>
           </li>
-          <li className="flex">
-            <Button onClick={signIn}>connect wallet</Button>
-          </li>
         </ul>
       </div>
     </header>
   );
 }
 
-export default Header;
+export default MainHeader;

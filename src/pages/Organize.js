@@ -1,27 +1,30 @@
-import { collection, query } from "firebase/firestore";
-import React from "react";
-import { db } from "../app/firebase";
-import { signIn } from "../app/near";
-import Button from "../components/Button";
-import ItemCard from "../components/Cards/ItemCard";
-import { useInfiniteItems } from "../hooks/useItems";
+import { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
+import ThemedSuspense from "../components/ThemedSuspense";
+import Layout from "../containers/Layout";
+import routes from "../routes";
+import Main from "./Main";
 
 function Organize() {
-  const q = query(collection(db, "items"));
-  const { items, isLoading } = useInfiniteItems(q);
   return (
     <>
-      <div className="my-6">
-        {isLoading ? (
-          <div>Loading</div>
-        ) : (
-          <>
-            {items.map((item) => (
-              <ItemCard key={item.id} item={item} />
-            ))}
-          </>
-        )}
-      </div>
+      <Suspense fallback={<ThemedSuspense />}>
+        <Routes>
+          <Route index element={<Main />} />
+          <Route element={<Layout />}>
+            {routes.map((route, i) => {
+              return route.component ? (
+                <Route
+                  key={i}
+                  exact={true}
+                  path={`/${route.path}`}
+                  element={<route.component />}
+                />
+              ) : null;
+            })}
+          </Route>
+        </Routes>
+      </Suspense>
     </>
   );
 }

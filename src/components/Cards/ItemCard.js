@@ -1,14 +1,11 @@
-import React, { useState } from "react";
-import { setDoc, Timestamp, doc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { db } from "../../app/firebase";
-import { categories } from "../../utils/categories";
+import { callFunction, getAccount } from "../../app/near";
 import Card from "../Card";
 import CardBody from "../CardBody";
-import Button from "../Button";
-import Select from "../Select";
 import ThemedSuspense from "../ThemedSuspense";
-import { callFunction, getAccount } from "../../app/near";
-import { Link } from "react-router-dom";
 
 function ItemCard({ item }) {
   const [category, setCategory] = useState(null);
@@ -79,13 +76,13 @@ function ItemCard({ item }) {
         <img alt="not found" src={item.media[0]} className="m-2" />
         <div className="flex flex-col m-2">
           <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-            {categories.find((it) => it.value === item.category).name}
+            {item.category}
           </p>
           <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
             {item.subcategory}
           </p>
           <div className="flex justify-end">
-            <Link to={{ pathname: `item/${item.id}` }}>see more</Link>
+            <Link to={{ pathname: `/item/${item.id}` }}>see more</Link>
           </div>
           {/* <Button onClick={() => approve(item.id)}>Approve</Button>
           <Button onClick={decline}>Decline</Button>

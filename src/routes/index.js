@@ -1,7 +1,9 @@
 import { lazy } from "react";
 
 // use lazy for better code splitting, a.k.a. load faster
-const Organize = lazy(() => import("../pages/Organize"));
+const Main = lazy(() => import("../pages/Main"));
+const ItemDeck = lazy(() => import("../pages/ItemDeck"));
+const Item = lazy(() => import("../pages/Item"));
 const Invite = lazy(() => import("../pages/Invite"));
 const Page404 = lazy(() => import("../pages/404"));
 
@@ -18,7 +20,15 @@ const Page404 = lazy(() => import("../pages/404"));
 const routes = [
   {
     path: "/",
-    component: Organize,
+    component: Main,
+  },
+  {
+    path: "/items",
+    component: ItemDeck,
+  },
+  {
+    path: "/item/:itemId",
+    component: Item,
   },
   {
     path: "/invite",

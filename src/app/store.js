@@ -5,9 +5,11 @@ import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 
 import authReducer from "../features/auth/authSlice";
+import itemDeckReducer from "../features/itemDeck/itemDeckSlice";
 
 const reducers = combineReducers({
   auth: authReducer,
+  itemDeck: itemDeckReducer,
 });
 
 const persistConfig = {

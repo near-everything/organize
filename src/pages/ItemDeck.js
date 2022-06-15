@@ -1,14 +1,17 @@
 import { collection, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { db } from "../app/firebase";
 import Button from "../components/Button";
 import ItemCard from "../components/Cards/ItemCard";
 import Header from "../components/Header";
+import { lastItem, nextItem } from "../features/itemDeck/itemDeckSlice";
 import { useInfiniteItems } from "../hooks/useItems";
 
 function ItemDeck() {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [currentItem, setCurrentItem] = useState(null);
+  const dispatch = useDispatch();
+  const currentIndex = useSelector((state) => state.itemDeck.currentIndex); 
   const q = query(collection(db, "items"));
   const { items, isLoading } = useInfiniteItems(q);
 
@@ -16,13 +19,13 @@ function ItemDeck() {
     setCurrentItem(items[currentIndex]);
   }, [currentIndex, items]);
 
-  const nextItem = () => {
-    setCurrentIndex(currentIndex + 1);
+  const next = () => {
+    dispatch(nextItem())
   };
 
-  const lastItem = () => {
+  const last = () => {
     if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
+      dispatch(lastItem())
     }
   };
 
@@ -44,12 +47,12 @@ function ItemDeck() {
             <div className="flex">
               <Button
                 className="w-1/2 h-16"
-                onClick={lastItem}
+                onClick={last}
                 disabled={currentIndex === 0}
               >
                 &#x2190;
               </Button>
-              <Button className="w-1/2 h-16" onClick={nextItem}>
+              <Button className="w-1/2 h-16" onClick={next}>
                 &#x2192;
               </Button>
             </div>

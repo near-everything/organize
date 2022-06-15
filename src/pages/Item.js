@@ -14,10 +14,12 @@ import Select from "../components/Select";
 import ThemedSuspense from "../components/ThemedSuspense";
 import { categories, conditions } from "../utils/categories";
 import { selectUser } from "../features/auth/authSlice";
+import { callFunction, getAccount } from "../app/near";
 
 function Item() {
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState(null);
+  const labels = useSelector((state) => state.labels.schema);
   const [subcategory, setSubcategory] = useState(null);
   const [edit, setEdit] = useState(false);
   const [files, setFiles] = useState([]);
@@ -36,6 +38,42 @@ function Item() {
   const resetFields = () => {
     setEdit(false);
   };
+
+
+  const approve = async (id) => {
+    setLoading(true);
+
+    try {
+      const docRef = doc(db, "items", id);
+      await setDoc(
+        docRef,
+        {
+          isValidated: true,
+          updatedTimestamp: Timestamp.now(),
+        },
+        { merge: true }
+      );
+      const account = getAccount();
+      await callFunction(
+        "nft_mint",
+        {
+          token_id: `${account.accountId + Date.now()}`,
+          metadata: {
+            title: "test title",
+            description: "test description",
+          },
+          receiver_id: account.accountId,
+        },
+        "0.1"
+      );
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const decline = () => {};
 
   const update = async (id) => {
     setLoading(true);
@@ -107,19 +145,20 @@ function Item() {
           ) : null}
           <div className="flex flex-col m-2">
             {edit ? (
-              <Select
-                placeholder="category"
-                onChange={(e) => setCategory(e.target.value)}
-                options={categories}
-              />
+              // <Select
+              //   placeholder="category"
+              //   onChange={(e) => setCategory(e.target.value)}
+              //   options={labels.categories}
+              // />
+              null
             ) : (
-              <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {data.category &&
-                  categories.find((it) => it.value === data.category).name}
-              </p>
+              null
+              // <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+              //   {data.category && data.category.name}
+              // </p>
             )}
-            <p className="mb-2 text-md font-medium text-gray-600 dark:text-gray-400">
-              {data.subcategory}
+            {/* <p className="mb-2 text-md font-medium text-gray-600 dark:text-gray-400">
+              {data.subcategory && data.subcategory.name}
             </p>
             <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
               Brand: {data.brand}
@@ -146,7 +185,7 @@ function Item() {
             </p>
             <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
               isValidated: {data.isValidated.toString()}
-            </p>
+            </p> */}
             <div className="flex flex-row">
               <Button onClick={() => setEdit(!edit)} className="mx-2">
                 Edit

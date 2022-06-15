@@ -6,10 +6,12 @@ import thunk from "redux-thunk";
 
 import authReducer from "../features/auth/authSlice";
 import itemDeckReducer from "../features/itemDeck/itemDeckSlice";
+import labelsReducer from "../features/labels/labelsSlice";
 
 const reducers = combineReducers({
   auth: authReducer,
   itemDeck: itemDeckReducer,
+  labels: labelsReducer,
 });
 
 const persistConfig = {

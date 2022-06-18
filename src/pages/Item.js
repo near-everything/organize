@@ -3,7 +3,6 @@ import axios from "axios";
 import { doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Select from "react-select";
 import { API_URL } from "../app/api";
@@ -52,6 +51,8 @@ function Item() {
   const resetFields = () => {
     setEdit(false);
   };
+
+  
 
   if (item.isLoading || loading) {
     return <ThemedSuspense />;

@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { signIn } from "../app/near";
 import { MoonIcon, SunIcon } from "../icons";
 import Button from "./Button";
 import { DarkModeContext } from "./DarkMode";
@@ -27,9 +26,6 @@ function Header() {
                 <MoonIcon className="w-5 h-5" aria-hidden="true" />
               )}
             </button>
-          </li>
-          <li className="flex">
-            <Button onClick={signIn}>connect wallet</Button>
           </li>
         </ul>
       </div>

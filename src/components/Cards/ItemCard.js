@@ -1,72 +1,13 @@
-import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "../../app/firebase";
-import { callFunction, getAccount } from "../../app/near";
 import Button from "../Button";
 import Card from "../Card";
 import CardBody from "../CardBody";
 import ThemedSuspense from "../ThemedSuspense";
 
 function ItemCard({ item }) {
-  const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const approve = async (id) => {
-    setLoading(true);
-
-    try {
-      const docRef = doc(db, "items", id);
-      await setDoc(
-        docRef,
-        {
-          isValidated: true,
-          updatedTimestamp: Timestamp.now(),
-        },
-        { merge: true }
-      );
-      const account = getAccount();
-      await callFunction(
-        "nft_mint",
-        {
-          token_id: `${account.accountId + Date.now()}`,
-          metadata: {
-            title: "test title",
-            description: "test description",
-          },
-          receiver_id: account.accountId,
-        },
-        "0.1"
-      );
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const decline = () => {};
-
-  const update = async (id) => {
-    setLoading(true);
-
-    try {
-      const docRef = doc(db, "items", id);
-      await setDoc(
-        docRef,
-        {
-          category: category,
-          updatedTimestamp: Timestamp.now(),
-        },
-        { merge: true }
-      );
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const viewItem = (id) => {
     navigate(`/item/${id}`);
@@ -82,17 +23,14 @@ function ItemCard({ item }) {
         <img alt="not found" src={item.media[0]} className="m-2" />
         <div className="flex flex-col m-2">
           <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-            {item.category.name}
+            {item.category}
           </p>
           <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            {item.subcategory.name}
+            {item.subcategory}
           </p>
           <div className="flex justify-end">
             <Button onClick={() => viewItem(item.id)}>view</Button>
           </div>
-          {/* <Button onClick={() => approve(item.id)}>Approve</Button>
-          <Button onClick={decline}>Decline</Button>
-          <Button onClick={() => update(item.id)}>Update</Button> */}
         </div>
       </CardBody>
     </Card>

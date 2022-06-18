@@ -1,33 +1,47 @@
 import { useFirestoreDocument } from "@react-query-firebase/firestore";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import axios from "axios";
+import { doc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { db, st } from "../app/firebase";
+import Select from "react-select";
+import { API_URL } from "../app/api";
+import { db } from "../app/firebase";
 import Button from "../components/Button";
 import Card from "../components/Card";
 import CardBody from "../components/CardBody";
 import ImageCard from "../components/Cards/ImageCard";
 import FileUpload from "../components/FileUpload";
-import Select from "../components/Select";
 import ThemedSuspense from "../components/ThemedSuspense";
-import { categories, conditions } from "../utils/categories";
-import { selectUser } from "../features/auth/authSlice";
-import { callFunction, getAccount } from "../app/near";
 
 function Item() {
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState(null);
-  const labels = useSelector((state) => state.labels.schema);
-  const [subcategory, setSubcategory] = useState(null);
+  const [attributes, setAttributes] = useState([]);
   const [edit, setEdit] = useState(false);
   const [files, setFiles] = useState([]);
 
   const { itemId } = useParams();
   const itemRef = doc(db, "items", itemId);
   const item = useFirestoreDocument(["items", itemId], itemRef);
-  const user = useSelector(selectUser);
+  const { control } = useForm({
+    defaultValues: item.attributes,
+  });
+  
+  useEffect(() => {
+    setLoading(true);
+    async function getAllLabels() {
+      await axios
+        .get(API_URL + "/attribute/")
+        .then((res) => {
+          const allAttributes = res.data.attributes;
+          setAttributes(allAttributes);
+        })
+        .catch((err) => console.error(err));
+    };
+    getAllLabels();
+    setLoading(false);
+  }, [])
 
   const removeFile = (index) => {
     setFiles((old) => {
@@ -37,72 +51,6 @@ function Item() {
 
   const resetFields = () => {
     setEdit(false);
-  };
-
-
-  const approve = async (id) => {
-    setLoading(true);
-
-    try {
-      const docRef = doc(db, "items", id);
-      await setDoc(
-        docRef,
-        {
-          isValidated: true,
-          updatedTimestamp: Timestamp.now(),
-        },
-        { merge: true }
-      );
-      const account = getAccount();
-      await callFunction(
-        "nft_mint",
-        {
-          token_id: `${account.accountId + Date.now()}`,
-          metadata: {
-            title: "test title",
-            description: "test description",
-          },
-          receiver_id: account.accountId,
-        },
-        "0.1"
-      );
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const decline = () => {};
-
-  const update = async (id) => {
-    setLoading(true);
-    let updateObject = {};
-    let urls = [];
-    if (files.length > 0) {
-      for (const img of files) {
-        const storageRef = ref(st, `images/${user}/${Timestamp.now()}`);
-        const snapshot = await uploadBytes(storageRef, img);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        urls.push(downloadURL);
-      }
-      const updatedMedia = { media: urls };
-      updateObject = { ...updateObject, ...updatedMedia };
-    }
-
-    if (category) {
-      updateObject = { ...updateObject, category };
-    }
-
-    try {
-      const docRef = doc(db, "items", itemId);
-      await setDoc(docRef, updateObject, { merge: true });
-    } catch (e) {
-      console.log(e);
-    } finally {
-      setLoading(false);
-      resetFields();
-    }
   };
 
   if (item.isLoading || loading) {
@@ -144,57 +92,46 @@ function Item() {
             </>
           ) : null}
           <div className="flex flex-col m-2">
-            {edit ? (
-              // <Select
-              //   placeholder="category"
-              //   onChange={(e) => setCategory(e.target.value)}
-              //   options={labels.categories}
-              // />
-              null
-            ) : (
-              null
-              // <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-              //   {data.category && data.category.name}
-              // </p>
-            )}
-            {/* <p className="mb-2 text-md font-medium text-gray-600 dark:text-gray-400">
-              {data.subcategory && data.subcategory.name}
+            <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+              {data.category && data.category}
             </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              Brand: {data.brand}
+            <p className="mb-2 text-md font-medium text-gray-600 dark:text-gray-400">
+              {data.subcategory && data.subcategory}
             </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              Condition:{" "}
-              {data.condition &&
-                conditions.find((it) => it.value === data.condition).name}
-            </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              Material: {data.material}
-            </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              Size: {data.size}
-            </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              Description: {data.description}
-            </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              Created Timestamp: {data.createdTimestamp.toString()}
-            </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              Updated Timestamp: {data.updatedTimestamp.toString()}
-            </p>
-            <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              isValidated: {data.isValidated.toString()}
-            </p> */}
+            {attributes &&
+              attributes.map((char) => {
+                  if (edit) {
+                    return (
+                      <Controller
+                        key={char.id}
+                        name={char.name}
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                          <Select
+                            options={char.options}
+                            {...field}
+                            label={char.label}
+                            isMulti={char.isMulti}
+                            className={`${
+                              char.isMulti ? "basic-multi-select" : ""
+                            }`}
+                            classNamePrefix="select"
+                          />
+                        )}
+                      />
+                    );
+                  } else {
+                    return (
+                      <p key={char.id} className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        {char.name}: {data.attributes[char.name]}
+                      </p>
+                    );
+                  }
+                })}
             <div className="flex flex-row">
               <Button onClick={() => setEdit(!edit)} className="mx-2">
                 Edit
-              </Button>
-              <Button
-                onClick={update}
-                className={`mx-2 ${edit ? "" : "hidden"}`}
-              >
-                Update
               </Button>
             </div>
 

@@ -1,6 +1,8 @@
+import { Buffer } from "buffer";
 import React, { Suspense } from "react";
 import ReactDom from "react-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { Provider } from "react-redux";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
@@ -11,8 +13,7 @@ import ThemedSuspense from "./components/ThemedSuspense";
 import { ThemeProvider } from "./context/ThemeContext";
 import "./index.css";
 import * as serviceWorker from "./serviceWorker";
-import { Buffer } from "buffer"; global.Buffer = Buffer;
-
+global.Buffer = Buffer;
 
 const persistor = persistStore(store);
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ ReactDom.render(
             <Suspense fallback={<ThemedSuspense />}>
               <QueryClientProvider client={queryClient}>
                 <App />
+                <ReactQueryDevtools initialIsOpen={false} />
               </QueryClientProvider>
             </Suspense>
           </PersistGate>

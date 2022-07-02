@@ -1,31 +1,30 @@
-import { collection, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { db } from "../app/firebase";
+import { useItems } from "../app/api";
 import Button from "../components/Button";
 import ItemCard from "../components/Cards/ItemCard";
 import Header from "../components/Header";
 import { lastItem, nextItem } from "../features/itemDeck/itemDeckSlice";
-import { useInfiniteItems } from "../hooks/useItems";
 
 function ItemDeck() {
   const [currentItem, setCurrentItem] = useState(null);
   const dispatch = useDispatch();
-  const currentIndex = useSelector((state) => state.itemDeck.currentIndex); 
-  const q = query(collection(db, "items"));
-  const { items, isLoading } = useInfiniteItems(q);
+  const currentIndex = useSelector((state) => state.itemDeck.currentIndex);
+  const { data, isLoading, isError } = useItems();
 
   useEffect(() => {
-    setCurrentItem(items[currentIndex]);
-  }, [currentIndex, items]);
+    if (data && currentIndex < data.length) {
+      setCurrentItem(data[currentIndex].node);
+    }
+  }, [currentIndex, data]);
 
   const next = () => {
-    dispatch(nextItem())
+    dispatch(nextItem());
   };
 
   const last = () => {
     if (currentIndex > 0) {
-      dispatch(lastItem())
+      dispatch(lastItem());
     }
   };
 

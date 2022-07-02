@@ -1,7 +1,8 @@
 import request, { gql } from "graphql-request";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery } from "react-query";
 
 export const API_URL = process.env.REACT_APP_EVERYTHING_API_URL;
+export const queryClient = new QueryClient();
 
 export function useItems() {
   return useQuery("items", async () => {
@@ -32,13 +33,13 @@ export function useItems() {
   });
 }
 
-export function useItemById() {
+export function useItemById(item_id) {
   return useQuery("itemById", async () => {
     const { itemById } = await request(
       API_URL,
       gql`
-        query itemById {
-          itemById(id: 33) {
+        query itemById($item_id: Int!) {
+          itemById(id: $item_id) {
             id
             categoryByCategoryId {
               name
@@ -59,7 +60,8 @@ export function useItemById() {
             }
           }
         }
-      `
+      `,
+      { item_id }
     );
     return itemById;
   });

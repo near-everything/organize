@@ -7,7 +7,7 @@ import ThemedSuspense from "../components/ThemedSuspense";
 
 function Item() {
   const { itemId } = useParams();
-  const { data, isLoading, isError } = useItemById(itemId);
+  const { data, isLoading, isError } = useItemById(parseInt(itemId));
 
   if (isLoading) {
     return <ThemedSuspense />;

@@ -4,6 +4,8 @@ import { lazy } from "react";
 const Main = lazy(() => import("../pages/Main"));
 const ItemDeck = lazy(() => import("../pages/ItemDeck"));
 const Item = lazy(() => import("../pages/Item"));
+const RequestDeck = lazy(() => import("../pages/RequestDeck"));
+const Request = lazy(() => import("../pages/Request"));
 const Page404 = lazy(() => import("../pages/404"));
 
 /**
@@ -28,6 +30,14 @@ const routes = [
   {
     path: "/item/:itemId",
     component: Item,
+  },
+  {
+    path: "/requests",
+    component: RequestDeck,
+  },
+  {
+    path: "/request/:requestId",
+    component: Request,
   },
   {
     path: "/404",

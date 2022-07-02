@@ -2,15 +2,15 @@ import request, { gql } from "graphql-request";
 import { useQuery } from "react-query";
 import { API_URL } from "../../app/api";
 
-export function useItems() {
-  return useQuery("items", async () => {
+export function useRequests() {
+  return useQuery("requests", async () => {
     const {
-      allItems: { edges },
+      allRequests: { edges },
     } = await request(
       API_URL,
       gql`
-        query allItems {
-          allItems {
+        query allRequests {
+          allRequests {
             edges {
               node {
                 id
@@ -31,18 +31,18 @@ export function useItems() {
   });
 }
 
-export function useItemById(item_id) {
-  return useQuery("itemById", async () => {
-    const { itemById } = await request(
+export function useRequestById(request_id) {
+  return useQuery("requestById", async () => {
+    const { requestById } = await request(
       API_URL,
       gql`
-        query itemById($item_id: Int!) {
-          itemById(id: $item_id) {
+        query requestById($request_id: Int!) {
+          requestById(id: $request_id) {
             id
             categoryByCategoryId {
               name
             }
-            itemCharacteristicsByItemId {
+            requestCharacteristicsByRequestId {
               edges {
                 node {
                   initialValue
@@ -59,8 +59,8 @@ export function useItemById(item_id) {
           }
         }
       `,
-      { item_id }
+      { request_id }
     );
-    return itemById;
+    return requestById;
   });
 }

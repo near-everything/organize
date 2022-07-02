@@ -1,9 +1,9 @@
 import { useParams } from "react-router-dom";
-import { useItemById } from "../app/api";
 import Card from "../components/Card";
 import CardBody from "../components/CardBody";
 import ImageCard from "../components/Cards/ImageCard";
 import ThemedSuspense from "../components/ThemedSuspense";
+import { useItemById } from "../features/itemDeck/itemDeckApi";
 
 function Item() {
   const { itemId } = useParams();

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useItems } from "../app/api";
 import Button from "../components/Button";
 import ItemCard from "../components/Cards/ItemCard";
 import Header from "../components/Header";
+import { useItems } from "../features/itemDeck/itemDeckApi";
 import { lastItem, nextItem } from "../features/itemDeck/itemDeckSlice";
 
 function ItemDeck() {

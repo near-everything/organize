@@ -10,12 +10,12 @@ function Main() {
 
   useEffect(() => {}, [dispatch]);
 
-  const organizeRequests = (id) => {
-    navigate(`/requests`);
-  };
-
   const organizeItems = (id) => {
     navigate(`/items`);
+  };
+
+  const organizeRequests = (id) => {
+    navigate(`/requests`);
   };
 
   return (
@@ -30,11 +30,11 @@ function Main() {
             <p className="text-4xl font-light">EVERYTHING</p>
             <br/>
             <div className="flex">
-              <Button className="w-1/2 h-16 mr-2" onClick={organizeRequests}>
+              <Button className="w-1/2 h-16 mr-2" onClick={organizeItems}>
                 items
               </Button>
 
-              <Button className="w-1/2 h-16 ml-2" onClick={organizeItems}>
+              <Button className="w-1/2 h-16 ml-2" onClick={organizeRequests}>
                 requests
               </Button>
             </div>
@@ -46,3 +46,6 @@ function Main() {
 }
 
 export default Main;
+
+doadmin
+db-postgresql-nyc1-everything-76464-do-user-11815715-0.b.db.ondigitalocean.com

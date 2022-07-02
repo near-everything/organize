@@ -5,12 +5,12 @@ import Card from "../Card";
 import CardBody from "../CardBody";
 import ThemedSuspense from "../ThemedSuspense";
 
-function ItemCard({ item }) {
+function RequestCard({ request }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const viewItem = (id) => {
-    navigate(`/item/${id}`);
+  const viewRequest = (id) => {
+    navigate(`/request/${id}`);
   };
 
   if (loading) {
@@ -20,16 +20,16 @@ function ItemCard({ item }) {
   return (
     <Card>
       <CardBody className="flex flex-col">
-        <img alt="not found" src={item.media[0]} className="m-2" />
+        <img alt="not found" src={request.media[0]} className="m-2" />
         <div className="flex flex-col m-2">
           <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-            {item.categoryByCategoryId.name}
+            {request.categoryByCategoryId.name}
           </p>
           <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            {item.subcategoryBySubcategoryId.name}
+            {request.subcategoryBySubcategoryId.name}
           </p>
           <div className="flex justify-end">
-            <Button onClick={() => viewItem(item.id)}>view</Button>
+            <Button onClick={() => viewRequest(request.id)}>view</Button>
           </div>
         </div>
       </CardBody>
@@ -37,4 +37,4 @@ function ItemCard({ item }) {
   );
 }
 
-export default ItemCard;
+export default RequestCard;

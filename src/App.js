@@ -1,12 +1,14 @@
-import React, { useEffect, lazy } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { lazy } from "react";
+import {
+  BrowserRouter as Router, Navigate,
+  Outlet, Route, Routes
+} from "react-router-dom";
 
-import AccessibleNavigationAnnouncer from "./components/AccessibleNavigationAnnouncer";
-import { useDispatch, useSelector } from "react-redux";
-import { selectUser, setUser } from "./features/auth/authSlice";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useDispatch, useSelector } from "react-redux";
 import { firebase } from "./app/firebase";
-import { initNear } from "./app/near";
+import AccessibleNavigationAnnouncer from "./components/AccessibleNavigationAnnouncer";
+import { selectUser, setUser } from "./features/auth/authSlice";
 
 const Organize = lazy(() => import("./pages/Organize"));
 const Login = lazy(() => import("./pages/Login"));
@@ -16,16 +18,11 @@ function App() {
   const auth = getAuth(firebase);
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      dispatch(setUser(user.uid))
+      dispatch(setUser(user.uid));
     } else {
-      dispatch(setUser(null))
+      dispatch(setUser(null));
     }
-  })
-  
-  useEffect(() => {
-    initNear()
-  }, [])
-  
+  });
 
   return (
     <>

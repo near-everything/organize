@@ -3,11 +3,11 @@ import Card from "../components/Card";
 import CardBody from "../components/CardBody";
 import ImageCard from "../components/Cards/ImageCard";
 import ThemedSuspense from "../components/ThemedSuspense";
-import { useItemById } from "../features/itemDeck/itemDeckApi";
+import { useRequestById } from "../features/requestDeck/requestDeckApi";
 
-function Item() {
-  const { itemId } = useParams();
-  const { data, isLoading, isError } = useItemById(parseInt(itemId));
+function Request() {
+  const { requestId } = useParams();
+  const { data, isLoading, isError } = useRequestById(parseInt(requestId));
 
   if (isLoading) {
     return <ThemedSuspense />;
@@ -27,7 +27,7 @@ function Item() {
             <p className="mb-2 text-md font-medium text-gray-600 dark:text-gray-400">
               {data.subcategoryBySubcategoryId.name}
             </p>
-            {data.itemCharacteristicsByItemId.edges.map((char) => {
+            {data.requestCharacteristicsByRequestId.edges.map((char) => {
               return (
                 <p
                   key={char.node.attributeByAttributeId.name}
@@ -45,4 +45,4 @@ function Item() {
   );
 }
 
-export default Item;
+export default Request;

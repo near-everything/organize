@@ -1,30 +1,33 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/Button";
-import ItemCard from "../components/Cards/ItemCard";
+import RequestCard from "../components/Cards/RequestCard";
 import Header from "../components/Header";
-import { useItems } from "../features/itemDeck/itemDeckApi";
-import { lastItem, nextItem } from "../features/itemDeck/itemDeckSlice";
+import { useRequests } from "../features/requestDeck/requestDeckApi";
+import {
+  lastRequest,
+  nextRequest
+} from "../features/requestDeck/requestDeckSlice";
 
-function ItemDeck() {
-  const [currentItem, setCurrentItem] = useState(null);
+function RequestDeck() {
+  const [currentRequest, setCurrentRequest] = useState(null);
   const dispatch = useDispatch();
-  const currentIndex = useSelector((state) => state.itemDeck.currentIndex);
-  const { data, isLoading, isError } = useItems();
+  const currentIndex = useSelector((state) => state.requestDeck.currentIndex);
+  const { data, isLoading, isError } = useRequests();
 
   useEffect(() => {
     if (data && currentIndex < data.length) {
-      setCurrentItem(data[currentIndex].node);
+      setCurrentRequest(data[currentIndex].node);
     }
   }, [currentIndex, data]);
 
   const next = () => {
-    dispatch(nextItem());
+    dispatch(nextRequest());
   };
 
   const last = () => {
     if (currentIndex > 0) {
-      dispatch(lastItem());
+      dispatch(lastRequest());
     }
   };
 
@@ -37,10 +40,10 @@ function ItemDeck() {
           <div className="flex flex-col justify-between h-full">
             <Header className="flex flex-1" />
             <div className="flex flex-1">
-              {currentItem ? (
-                <ItemCard key={currentItem.id} item={currentItem} />
+              {currentRequest ? (
+                <RequestCard key={currentRequest.id} request={currentRequest} />
               ) : (
-                <p>No item</p>
+                <p>No Request</p>
               )}
             </div>
             <div className="flex">
@@ -62,4 +65,4 @@ function ItemDeck() {
   );
 }
 
-export default ItemDeck;
+export default RequestDeck;

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import MainHeader from "../components/MainHeader";
 
@@ -28,12 +28,11 @@ function Main() {
               organize
             </p>
             <p className="text-4xl font-light">EVERYTHING</p>
-            <br/>
+            <br />
             <div className="flex">
               <Button className="w-1/2 h-16 mr-2" onClick={organizeItems}>
                 items
               </Button>
-
               <Button className="w-1/2 h-16 ml-2" onClick={organizeRequests}>
                 requests
               </Button>
@@ -46,6 +45,3 @@ function Main() {
 }
 
 export default Main;
-
-doadmin
-db-postgresql-nyc1-everything-76464-do-user-11815715-0.b.db.ondigitalocean.com

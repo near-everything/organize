@@ -42,25 +42,67 @@ export function useItemById(item_id) {
             categoryByCategoryId {
               name
             }
+            subcategoryBySubcategoryId {
+              name
+            }
             itemCharacteristicsByItemId {
               edges {
                 node {
-                  initialValue
-                  attributeByAttributeId {
-                    name
-                  }
+                  attributeId
+                  optionId
                 }
               }
             }
             media
-            subcategoryBySubcategoryId {
-              name
-            }
           }
         }
       `,
       { item_id }
     );
     return itemById;
+  });
+}
+
+export function useAttributeById(attributeId) {
+  return useQuery(["attributeById", attributeId], async () => {
+    const { attributeById } = await request(
+      API_URL,
+      gql`
+        query attributeById {
+          attributeById(id: ${parseInt(attributeId)}) {
+            id
+            name
+            relationshipsByAttributeId {
+              edges {
+                node {
+                  optionByOptionId {
+                    id
+                    value
+                  }
+                }
+              }
+            }
+          }
+        }
+      `
+    );
+    return attributeById;
+  });
+}
+
+export function useOptionById(optionId) {
+  return useQuery(["optionById", optionId], async () => {
+    const { optionById } = await request(
+      API_URL,
+      gql`
+        query optionById {
+          optionById(id: ${parseInt(optionId)}) {
+            id
+            value
+          }
+        }
+      `
+    );
+    return optionById;
   });
 }

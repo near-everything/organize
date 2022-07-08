@@ -1,6 +1,7 @@
 import { Buffer } from "buffer";
 import React, { Suspense } from "react";
 import ReactDom from "react-dom";
+import "react-phone-input-2/lib/style.css";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Provider } from "react-redux";

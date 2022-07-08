@@ -2,8 +2,14 @@ import React from 'react'
 
 function ThemedSuspense() {
   return (
-    <div className="w-full h-screen p-6 text-lg font-medium text-gray-600 bg-green-500 dark:text-gray-400 dark:bg-green-900">
-      Loading...
+    <div className="w-full h-screen bg-green-500 dark:bg-green-900 "/>
+  )
+}
+
+export function ErrorScreen({ children }) {
+  return (
+    <div className="w-full h-screen bg-red-500 dark:bg-red-900 ">
+      {children}
     </div>
   )
 }

@@ -1,22 +1,14 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import Card from "../Card";
 import CardBody from "../CardBody";
-import ThemedSuspense from "../ThemedSuspense";
 
 function ItemCard({ item }) {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const viewItem = (id) => {
     navigate(`/item/${id}`);
   };
-
-  if (loading) {
-    return <ThemedSuspense />;
-  }
-
   return (
     <Card>
       <CardBody className="flex flex-col">

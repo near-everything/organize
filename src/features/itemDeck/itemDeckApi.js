@@ -130,7 +130,12 @@ export function useUpdateCharacteristic() {
           }
         }
       `,
-      { newOptionId: characteristicPatch.newOptionId, itemId: characteristicPatch.itemId, attributeId: characteristicPatch.newOptionId, oldOptionId: characteristicPatch.oldOptionId }
+      {
+        newOptionId: characteristicPatch.newOptionId,
+        itemId: characteristicPatch.itemId,
+        attributeId: characteristicPatch.attributeId,
+        oldOptionId: characteristicPatch.oldOptionId,
+      }
     );
   });
 }

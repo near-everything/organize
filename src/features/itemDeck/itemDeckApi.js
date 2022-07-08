@@ -1,5 +1,5 @@
 import request, { gql } from "graphql-request";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { API_URL } from "../../app/api";
 
 export function useItems() {
@@ -104,5 +104,33 @@ export function useOptionById(optionId) {
       `
     );
     return optionById;
+  });
+}
+
+export function useUpdateCharacteristic() {
+  return useMutation(async (characteristicPatch) => {
+    await request(
+      API_URL,
+      gql`
+        mutation MyQuery(
+          $oldOptionId: Int!
+          $attributeId: Int!
+          $itemId: Int!
+          $newOptionId: Int!
+        ) {
+          updateItemCharacteristicByItemIdAndAttributeIdAndOptionId(
+            input: {
+              itemCharacteristicPatch: { optionId: $newOptionId }
+              itemId: $itemId
+              attributeId: $attributeId
+              optionId: $oldOptionId
+            }
+          ) {
+            clientMutationId
+          }
+        }
+      `,
+      { newOptionId: characteristicPatch.newOptionId, itemId: characteristicPatch.itemId, attributeId: characteristicPatch.newOptionId, oldOptionId: characteristicPatch.oldOptionId }
+    );
   });
 }

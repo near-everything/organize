@@ -36,46 +36,61 @@ const AttributeField = React.forwardRef(function AttributeField(props, ref) {
 
   return (
     <>
-      <div className="flex flex-row">
-        {edit ? (
-          <>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Controller
-                name={`${attribute.id}`}
-                control={control}
-                defaultValue={options.find((it) => it.value === option.id)}
-                render={({ field }) => (
-                  // TODO : Add check for type
-                  <Select
-                    options={options}
-                    {...field}
-                    label={attribute.name}
-                    // isMulti={char.isMulti}
-                    // className={`${char.isMulti ? "basic-multi-select" : ""}`}
-                    classNamePrefix="select"
-                  />
-                )}
-              />
-              <button type="submit" className="w-4 ml-2">
-                <CheckMarkIcon />
-              </button>
-              <button onClick={() => setEdit(!edit)} className="w-4 ml-2">
-                <DeleteIcon />
-              </button>
-            </form>
-          </>
-        ) : (
-          <>
-            <span className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-              {attribute.name}:
-            </span>{" "}
-            {option.value}
+      {edit ? (
+        <>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="flex flex-row w-full justify-between border-t-2">
+              <div className="flex w-32 p-4">
+                <span className="font-medium text-gray-600 dark:text-gray-400">
+                  {attribute.name}:
+                </span>
+              </div>
+              <div className="flex flex-1">
+                <Controller
+                  name={`${attribute.id}`}
+                  control={control}
+                  defaultValue={options.find((it) => it.value === option.id)}
+                  render={({ field }) => (
+                    // TODO : Add check for type
+                    <Select
+                      options={options}
+                      {...field}
+                      label={attribute.name}
+                      // isMulti={char.isMulti}
+                      // className={`${char.isMulti ? "basic-multi-select" : ""}`}
+                      classNamePrefix="select"
+                    />
+                  )}
+                />
+              </div>
+              <div className="flex align-middle">
+                <button type="submit" className="w-4 ml-2">
+                  <CheckMarkIcon />
+                </button>
+                <button onClick={() => setEdit(!edit)} className="w-4 ml-2">
+                  <DeleteIcon />
+                </button>
+              </div>
+            </div>
+          </form>
+        </>
+      ) : (
+        <>
+          <div className="flex flex-row w-full justify-between border-t-2">
+            <div className="flex w-32 p-4">
+              <span className="font-medium text-gray-600 dark:text-gray-400">
+                {attribute.name}:
+              </span>
+            </div>
+            <div className="flex flex-1 p-4">
+              <span>{option.value}</span>
+            </div>
             <button className="w-4 ml-2" onClick={() => setEdit(!edit)}>
               <EditIcon />
             </button>
-          </>
-        )}
-      </div>
+          </div>
+        </>
+      )}
     </>
   );
 });

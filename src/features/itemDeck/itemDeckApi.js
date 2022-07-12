@@ -1,24 +1,23 @@
-import request, { gql } from "graphql-request";
-import { useMutation, useQuery } from "react-query";
-import { API_URL } from "../../app/api";
+import { gql } from "graphql-request";
+import { useMutation, useQuery } from "react-query"; 
+import { graphqlClient } from "../../app/api";
 
 export function useItems() {
   return useQuery("items", async () => {
     const {
-      allItems: { edges },
-    } = await request(
-      API_URL,
+      items: { edges },
+    } = await graphqlClient.request(
       gql`
-        query allItems {
-          allItems {
+        query items {
+          items {
             edges {
               node {
                 id
-                categoryByCategoryId {
+                category {
                   name
                 }
                 media
-                subcategoryBySubcategoryId {
+                subcategory {
                   name
                 }
               }
@@ -33,19 +32,18 @@ export function useItems() {
 
 export function useItemById(item_id) {
   return useQuery("itemById", async () => {
-    const { itemById } = await request(
-      API_URL,
+    const { item } = await graphqlClient.request(
       gql`
         query itemById($item_id: Int!) {
-          itemById(id: $item_id) {
+          item(id: $item_id) {
             id
-            categoryByCategoryId {
+            category {
               name
             }
-            subcategoryBySubcategoryId {
+            subcategory {
               name
             }
-            itemCharacteristicsByItemId {
+            itemCharacteristics {
               edges {
                 node {
                   attributeId
@@ -59,23 +57,22 @@ export function useItemById(item_id) {
       `,
       { item_id }
     );
-    return itemById;
+    return item;
   });
 }
 
 export function useAttributeById(attributeId) {
   return useQuery(["attributeById", attributeId], async () => {
-    const { attributeById } = await request(
-      API_URL,
+    const { attribute } = await graphqlClient.request(
       gql`
         query attributeById {
-          attributeById(id: ${parseInt(attributeId)}) {
+          attribute(id: ${parseInt(attributeId)}) {
             id
             name
-            relationshipsByAttributeId {
+            relationships {
               edges {
                 node {
-                  optionByOptionId {
+                  option {
                     id
                     value
                   }
@@ -86,31 +83,29 @@ export function useAttributeById(attributeId) {
         }
       `
     );
-    return attributeById;
+    return attribute;
   });
 }
 
 export function useOptionById(optionId) {
   return useQuery(["optionById", optionId], async () => {
-    const { optionById } = await request(
-      API_URL,
+    const { option } = await graphqlClient.request(
       gql`
         query optionById {
-          optionById(id: ${parseInt(optionId)}) {
+          option(id: ${parseInt(optionId)}) {
             id
             value
           }
         }
       `
     );
-    return optionById;
+    return option;
   });
 }
 
 export function useUpdateCharacteristic() {
   return useMutation(async (characteristicPatch) => {
-    await request(
-      API_URL,
+    await graphqlClient.request(
       gql`
         mutation MyQuery(
           $oldOptionId: Int!

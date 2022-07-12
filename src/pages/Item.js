@@ -31,12 +31,12 @@ function Item() {
             ) : null}
             <div className="flex flex-col m-2">
               <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                {data.categoryByCategoryId.name}
+                {data.category.name}
               </p>
               <p className="mb-2 text-md font-medium text-gray-600 dark:text-gray-400">
-                {data.subcategoryBySubcategoryId.name}
+                {data.subcategory.name}
               </p>
-              {data.itemCharacteristicsByItemId.edges.map((char, index) => {
+              {data.itemCharacteristics.edges.map((char, index) => {
                 return (
                   <Suspense key={index}>
                     <AttributeField

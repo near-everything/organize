@@ -29,9 +29,9 @@ const AttributeField = React.forwardRef(function AttributeField(props, ref) {
     setEdit(!edit);
   };
   let options;
-  options = attribute.relationshipsByAttributeId.edges?.map((relationship) => ({
-    value: relationship.node.optionByOptionId.id,
-    label: relationship.node.optionByOptionId.value,
+  options = attribute.relationships.edges?.map((relationship) => ({
+    value: relationship.node.option.id,
+    label: relationship.node.option.value,
   }));
 
   return (

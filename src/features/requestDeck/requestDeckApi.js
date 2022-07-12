@@ -1,24 +1,23 @@
-import request, { gql } from "graphql-request";
+import { gql } from "graphql-request";
 import { useQuery } from "react-query";
-import { API_URL } from "../../app/api";
+import { graphqlClient } from "../../app/api";
 
 export function useRequests() {
   return useQuery("requests", async () => {
     const {
-      allRequests: { edges },
-    } = await request(
-      API_URL,
+      requests: { edges },
+    } = await graphqlClient.request(
       gql`
-        query allRequests {
-          allRequests {
+        query requests {
+          requests {
             edges {
               node {
                 id
-                categoryByCategoryId {
+                category {
                   name
                 }
                 media
-                subcategoryBySubcategoryId {
+                subcategory {
                   name
                 }
               }
@@ -33,27 +32,26 @@ export function useRequests() {
 
 export function useRequestById(request_id) {
   return useQuery("requestById", async () => {
-    const { requestById } = await request(
-      API_URL,
+    const { request } = await graphqlClient.request(
       gql`
         query requestById($request_id: Int!) {
-          requestById(id: $request_id) {
+          request(id: $request_id) {
             id
-            categoryByCategoryId {
+            category {
               name
             }
-            requestCharacteristicsByRequestId {
+            requestCharacteristics {
               edges {
                 node {
                   initialValue
-                  attributeByAttributeId {
+                  attribute {
                     name
                   }
                 }
               }
             }
             media
-            subcategoryBySubcategoryId {
+            subcategory {
               name
             }
           }
@@ -61,6 +59,6 @@ export function useRequestById(request_id) {
       `,
       { request_id }
     );
-    return requestById;
+    return request;
   });
 }

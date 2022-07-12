@@ -23,10 +23,10 @@ function RequestCard({ request }) {
         <img alt="not found" src={request.media[0]} className="m-2" />
         <div className="flex flex-col m-2">
           <p className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-            {request.categoryByCategoryId.name}
+            {request.category.name}
           </p>
           <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
-            {request.subcategoryBySubcategoryId.name}
+            {request.subcategory.name}
           </p>
           <div className="flex justify-end">
             <Button onClick={() => viewRequest(request.id)}>view</Button>
